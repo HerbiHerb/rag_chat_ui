@@ -1,0 +1,42 @@
+{% extends '_layout.html' %}
+
+
+{% block body %}
+<div class="row" style="height: 10vh;">
+    <div class="col-sm-5">
+    </div>
+    <div class="col-sm-2">
+
+    </div>
+    <div class="col-sm-5">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-5">
+    </div>
+    <div class="col-sm-2">
+        <main class="form-signin">
+            <form name="login-form" action="/login" method="post">
+              <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+          
+              <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                <label for="floatingInput">Username</label>
+              </div>
+              <div class="form-floating">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+              </div>
+              <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+
+            </form>
+            <form name="register-form" action="/register" method="post">
+              <button class="w-100 btn btn-lg btn-primary" type="submit" style="margin-top: 5px;">Register</button>
+            </form>
+        </main>
+    </div>
+    <div class="col-sm-5">
+    </div>
+</div>
+
+{% endblock %}

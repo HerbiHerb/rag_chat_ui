@@ -1,1 +1,1 @@
-# rag_chat_ui
+# Rag Chat UI
