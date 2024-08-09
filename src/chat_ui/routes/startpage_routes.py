@@ -24,13 +24,26 @@ def startpage():
     )
     response_data = json.loads(request_response.text)
     conv_id = response_data["conv_id"]
-    chat_messages = requests.post(
+    conv_data = requests.post(
         url=os.environ["HOST_URL"] + "/get_chat_messages",
         data=json.dumps({"query": conv_id, "user_id": user_id}),
     )
-    chat_messages = json.loads(chat_messages.text)
+    documents = requests.post(
+        url=os.environ["HOST_URL"] + "/get_all_doument_meta_data",
+        data=json.dumps({"user_id": user_id}),
+    )
+    documents = json.loads(documents.text)
+    conv_data = json.loads(conv_data.text)
+    chat_messages = conv_data["chat_messages"]
+    sources = conv_data["sources"]
+    chat_messages_with_sources = [
+        list(entry) for entry in list(zip(chat_messages, sources))
+    ]
     return render_template(
-        "startpage.html", session=session, chat_messages=chat_messages
+        "startpage.html",
+        session=session,
+        chat_messages=chat_messages_with_sources,
+        documents=documents,
     )
 
 
@@ -65,6 +78,19 @@ def enter_query():
 
 @app.route("/start_new_conversation", methods=["POST"])
 def start_new_conversation():
+    response = {"success": False}
+    user_id = session["user_id"]
+    query_data = json.dumps({"user_id": user_id})
+    new_conv_id = requests.post(
+        url=os.environ["HOST_URL"] + "/create_new_conversation", data=query_data
+    )
+    new_conv_id = json.loads(new_conv_id.text)["conv_id"]
+    response["success"] = True
+    return response
+
+
+@app.route("/get_answer_sources", methods=["POST"])
+def get_answer_sources():
     response = {"success": False}
     user_id = session["user_id"]
     query_data = json.dumps({"user_id": user_id})

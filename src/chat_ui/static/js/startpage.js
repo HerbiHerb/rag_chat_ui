@@ -1,4 +1,59 @@
 
+//// Polling of new user queries //////
+// function do_polling() {
+//     fetch("/check_for_user_queries", {
+//         method: "GET",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         keepalive: true
+//     }).then(response => {
+//         return response.json();
+//     }).then(data => {
+//         if (data["success"]) {
+//             let messages_div = document.getElementById("chat-messages-startpage");
+//             let job_dict = data["job_list"];
+//             let user_query = job_dict["query"];
+//             let answer = "";
+//             if("agent_answer" in job_dict){
+//                 answer = job_dict["agent_answer"];
+//             }
+
+//             let user_query_div = document.createElement("div");
+//             user_query_div.style.width = "100%";
+//             user_query_div.innerHTML = "User:";
+//             var user_query_div_content = document.createElement('div');
+//             user_query_div_content.setAttribute("class", "user-question-container-startpage")
+//             user_query_div_content.innerHTML = user_query;
+
+//             let model_answer_div = document.createElement("div");
+//             model_answer_div.style.width = "100%";
+//             model_answer_div.style.backgroundColor = "lightblue";
+//             model_answer_div.innerHTML = "Model:";
+//             var model_answer_div_content = document.createElement('div');
+//             model_answer_div_content.setAttribute("class", "model-answer-container-startpage")
+//             model_answer_div_content.style.width = "100%";
+//             model_answer_div_content.style.backgroundColor = "lightblue";
+//             model_answer_div_content.innerHTML = answer;
+//             let user_msg_seperator = document.createElement("hr");
+//             let answer_msg_seperator = document.createElement("hr");
+//             messages_div.appendChild(user_query_div);
+//             messages_div.appendChild(user_query_div_content);
+//             messages_div.appendChild(user_msg_seperator);
+//             messages_div.appendChild(model_answer_div);
+//             messages_div.appendChild(model_answer_div_content);
+//             messages_div.appendChild(answer_msg_seperator);
+//         }
+//     });
+//     setTimeout(do_polling, 800);
+// }
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     do_polling();
+// });
+
+///////////////////////////////////////
+
 document.getElementById('question-prompt-all-documents').addEventListener('keypress', function (event) {
     if (event.key == 'Enter') {
         handleKeyPress();
@@ -51,10 +106,10 @@ function insert_user_input_message(chat_div, input_div) {
     return spinner_div;
 }
 
-function insert_chatgpt_answer_message(chat_div, response_message, urls) {
+function insert_chatgpt_answer_message(chat_div, response_message, sources) {
     let container_div = document.createElement("div");
     container_div.setAttribute("class", "model-answer-container-startpage");
-    // container_div.addEventListener("click", handle_click_on_model_answer);
+    //container_div.addEventListener("click", handle_click_on_model_answer);
 
     // let close_span = document.createElement("span");
     // close_span.addEventListener("click", message_delete_event_handler);
@@ -80,39 +135,42 @@ function insert_chatgpt_answer_message(chat_div, response_message, urls) {
     container_div.appendChild(new_assistant_div);
     container_div.appendChild(new_assistant_div_content);
 
-    // let empty_div = document.createElement("div");
-    // empty_div.style.width = "100%";
-    // empty_div.style.backgroundColor = "lightblue";
-    // empty_div.innerHTML = "Sources:"
-    // container_div.appendChild(empty_div);  
+    let button_div = document.createElement("div");
+    button_div.style.width = "100%";
+    button_div.style.backgroundColor = "lightblue";
+    button_div.style.display = "inline-block";
+    let button = document.createElement("button");
+    button.type = "button";
+    button.style.float = "left";
+    button.style.width = "200px";
+    button.setAttribute("class", "show-hide-sources btn btn-info");
+    //button.className = "show-hide-sources btn btn-info";
+    button.innerText = 'Show Sources'; // Initialer Text des Buttons
+    addToggleEventListener(button);
+    button_div.appendChild(button);
+    container_div.appendChild(button_div);
 
     let new_assistant_div_sources = document.createElement("div");
+    new_assistant_div_sources.setAttribute("class", "answer-sources");
+    //new_assistant_div_sources.className = "answer-sources";
     new_assistant_div_sources.style.width = "100%";
     new_assistant_div_sources.style.backgroundColor = "lightblue";
-    new_assistant_div_sources.innerHTML = "Sources:"
-    container_div.appendChild(new_assistant_div_sources);
+    new_assistant_div_sources.style.display = "none";
 
-    for (let i = 0; i < urls.length; i++) {
-        let url = urls[i]
-        // let url_link_div = document.createElement("a");
-        // url_link_div.style.width = "100%";
-        // url_link_div.style.backgroundColor = "lightblue";
-        // url_link_div.setAttribute("href", "url")
-        // url_link_div.innerHTML = url
-        let url_link_div = document.createElement("div");
-        url_link_div.style.width = "100%";
-        url_link_div.style.backgroundColor = "lightblue";
-        let a_tag = document.createElement("a");
-        a_tag.setAttribute("href", url);
-        a_tag.innerHTML = url;
-        url_link_div.appendChild(a_tag)
-        //url_link_div.innerHTML = url
-        container_div.appendChild(url_link_div);
+    for (let i = 0; i < sources.length; i++) {
+        let meta_data = sources[i]
+        if ("text" in meta_data) {
+            let source_text = meta_data["text"];
+            let source_text_paragraph = document.createElement("p");
+            source_text_paragraph.style.width = "100%";
+            source_text_paragraph.style.backgroundColor = "lightblue";
+            source_text_paragraph.innerHTML = source_text;
+            new_assistant_div_sources.appendChild(source_text_paragraph);
+
+        } 
     }
-
+    container_div.appendChild(new_assistant_div_sources);
     let hr_element = document.createElement("hr");
-    //container_div.appendChild(close_span);
-
     container_div.appendChild(hr_element);
     chat_div.appendChild(container_div);
 }
@@ -134,10 +192,8 @@ function handle_chat(msg) {
         if (data["success"]) {
             spinner_div.remove();
             let response_message = data["answer"];
-            let meta_data = data["meta"];
-            let urls = meta_data.map(dict => dict.URL);
-            //let urls = meta_data["url"]
-            insert_chatgpt_answer_message(chat_div, response_message, urls);
+            let sources = data["sources"];
+            insert_chatgpt_answer_message(chat_div, response_message, sources);
 
         }
     });
@@ -192,3 +248,46 @@ document.getElementById("start-new-conversation-btn").addEventListener("click", 
         }
     });
 })
+
+
+function showHideButtonClickHandler(){
+
+};
+
+
+function addToggleEventListener(button) {
+    button.addEventListener('click', function () {
+        const sourceContainer = this.parentElement.nextElementSibling;
+        if (sourceContainer.style.display === 'none' || sourceContainer.style.display === '') {
+            sourceContainer.style.display = 'block';
+            this.innerText = 'Hide Sources';
+        } else {
+            sourceContainer.style.display = 'none';
+            this.innerText = 'Show Sources';
+        }
+    });
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Selektiere alle Buttons mit der Klasse 'show-hide-sources'
+    const buttons = document.querySelectorAll('.show-hide-sources');
+
+    buttons.forEach(addToggleEventListener);
+
+    // buttons.forEach(button => {
+    //     button.addEventListener('click', function () {
+    //         // Finde den nächsten Element-Sibling mit der Klasse 'answer-sources'
+    //         const sourceContainer = this.parentElement.nextElementSibling;
+    //         if (sourceContainer.style.display === 'none' || sourceContainer.style.display === '') {
+    //             sourceContainer.style.display = 'block';
+    //             this.innerText = 'Hide Sources';
+    //         } else {
+    //             sourceContainer.style.display = 'none';
+    //             this.innerText = 'Show Sources';
+    //         }
+    //     });
+    // });
+});
+
