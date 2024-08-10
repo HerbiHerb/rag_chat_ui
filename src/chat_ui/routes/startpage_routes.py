@@ -63,7 +63,14 @@ def enter_query():
     if not "query" in request_data:
         return "Request must contain a 'query' key"
     user_id = session["user_id"]
-    query_data = json.dumps({"query": request_data["query"], "user_id": user_id})
+    selected_documents = request_data["selected_documents"]
+    query_data = json.dumps(
+        {
+            "query": request_data["query"],
+            "user_id": user_id,
+            "selected_documents": selected_documents,
+        }
+    )
     try:
         request_response = requests.post(
             url=os.environ["HOST_URL"] + "/execute_rag", data=query_data

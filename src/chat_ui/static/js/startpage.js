@@ -60,12 +60,22 @@ document.getElementById('question-prompt-all-documents').addEventListener('keypr
     }
 });
 
+function getSelectedDocuments() {
+    let selectedDocuments = [];
+    let checkboxes = document.querySelectorAll('input[name="document"]:checked');
+    checkboxes.forEach((checkbox) => {
+        selectedDocuments.push(checkbox.value);
+    });
+    return selectedDocuments;
+}
 
 function handleKeyPress() {
     let input_div = document.getElementById('question-prompt-all-documents');
     let input_text = input_div.textContent;
+    let selectedDocuments = getSelectedDocuments();
     let msg = {
         "query": input_text,
+        "selected_documents": selectedDocuments
     };
     handle_chat(msg);
 }
@@ -74,11 +84,6 @@ function insert_user_input_message(chat_div, input_div) {
     let input_text = input_div.textContent;
     let container_div = document.createElement("div");
     container_div.setAttribute("class", "user-question-container-startpage");
-
-    // let close_span = document.createElement("span");
-    // close_span.addEventListener("click", message_delete_event_handler);
-    // close_span.innerHTML = '&times;';
-    // close_span.setAttribute("class", "close");
 
     let new_user_div = document.createElement("div");
     new_user_div.style.width = "100%";
@@ -109,20 +114,6 @@ function insert_user_input_message(chat_div, input_div) {
 function insert_chatgpt_answer_message(chat_div, response_message, sources) {
     let container_div = document.createElement("div");
     container_div.setAttribute("class", "model-answer-container-startpage");
-    //container_div.addEventListener("click", handle_click_on_model_answer);
-
-    // let close_span = document.createElement("span");
-    // close_span.addEventListener("click", message_delete_event_handler);
-    // close_span.innerHTML = '&times;';
-    // close_span.setAttribute("class", "close");
-
-    // let assistant_message_idx_div = document.createElement("div");
-    // assistant_message_idx_div.setAttribute("class", "message-index");
-    // assistant_message_idx_div.style.display = "none";
-    // assistant_message_idx_div.innerHTML = assistant_message_idx;
-    // close_span.appendChild(assistant_message_idx_div)
-    // user_message_idx_div.innerHTML = user_message_idx;
-
     let new_assistant_div = document.createElement("div");
     new_assistant_div.style.width = "100%";
     new_assistant_div.style.backgroundColor = "lightblue";

@@ -11,7 +11,7 @@
             <ul style="list-style-type: none; padding-left: 10px;">
                 {% for document in documents %}
                 <li style="margin-bottom: 10px;">
-                    <input type="checkbox" id="doc{{loop.index}}" name="document" value="{{document}}">
+                    <input type="checkbox" id="doc{{loop.index}}" name="document" value="{{document['document_name']}}">
                     <label for="doc{{loop.index}}">{{document["document_name"]}}</label>
                 </li>
                 {% endfor %}
