@@ -11,7 +11,8 @@ from flask import (
     request,
     session,
 )
-from ..init_flask_app import app
+import redis
+from ..init_flask_app import app, redis_client
 import json
 
 
@@ -33,6 +34,7 @@ def login():
     response_data = json.loads(request_response.text)
     if "user_id" in response_data and response_data["user_id"] != None:
         session["user_id"] = response_data["user_id"]
+        redis_client.set("user_id", response_data["user_id"])
         response["success"] = True
         flash("You were successfully logged in", "success")
         return redirect(url_for("startpage"))

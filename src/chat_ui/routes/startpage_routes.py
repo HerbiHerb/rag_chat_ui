@@ -5,10 +5,11 @@ import yaml
 from flask import (
     jsonify,
     render_template,
-    redirect,
+    make_response,
     request,
     session,
 )
+from flask_cors import cross_origin
 from ..init_flask_app import app
 import json
 
@@ -83,6 +84,19 @@ def enter_query():
     return jsonify(response)
 
 
+@app.route("/check_for_speech_queries", methods=["POST", "GET"])
+def check_for_speech_queries():
+    response = {"success": False}
+    user_id = session["user_id"]
+    # check if there are new queries in the host database
+    print("check for speech queries")
+    query_data = json.dumps({"user_id": user_id, "selected_documents": []})
+    answer_data = requests.post(
+        url=os.environ["HOST_URL"] + "/process_speech_query", data=query_data
+    )
+    return jsonify(response)
+
+
 @app.route("/start_new_conversation", methods=["POST"])
 def start_new_conversation():
     response = {"success": False}
@@ -107,3 +121,13 @@ def get_answer_sources():
     new_conv_id = json.loads(new_conv_id.text)["conv_id"]
     response["success"] = True
     return response
+
+
+@app.route("/get_current_user_id", methods=["GET"])
+@cross_origin()  # Enable CORS for this route
+def get_current_user_id():
+    response = {"success": False}
+    if "user_id" in session:
+        response["user_id"] = session["user_id"]
+        response["success"] = True
+    return jsonify(response)

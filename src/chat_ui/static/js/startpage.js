@@ -1,56 +1,56 @@
 
 //// Polling of new user queries //////
-// function do_polling() {
-//     fetch("/check_for_user_queries", {
-//         method: "GET",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         keepalive: true
-//     }).then(response => {
-//         return response.json();
-//     }).then(data => {
-//         if (data["success"]) {
-//             let messages_div = document.getElementById("chat-messages-startpage");
-//             let job_dict = data["job_list"];
-//             let user_query = job_dict["query"];
-//             let answer = "";
-//             if("agent_answer" in job_dict){
-//                 answer = job_dict["agent_answer"];
-//             }
+function poll_speech_query_answers() {
+    fetch("/check_for_speech_queries", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        keepalive: true
+    }).then(response => {
+        return response.json();
+    }).then(data => {
+        if (data["success"]) {
+            let messages_div = document.getElementById("chat-messages-startpage");
+            // let job_dict = data["job_list"];
+            // let user_query = job_dict["query"];
+            // let answer = "";
+            // if("agent_answer" in job_dict){
+            //     answer = job_dict["agent_answer"];
+            // }
 
-//             let user_query_div = document.createElement("div");
-//             user_query_div.style.width = "100%";
-//             user_query_div.innerHTML = "User:";
-//             var user_query_div_content = document.createElement('div');
-//             user_query_div_content.setAttribute("class", "user-question-container-startpage")
-//             user_query_div_content.innerHTML = user_query;
+            // let user_query_div = document.createElement("div");
+            // user_query_div.style.width = "100%";
+            // user_query_div.innerHTML = "User:";
+            // var user_query_div_content = document.createElement('div');
+            // user_query_div_content.setAttribute("class", "user-question-container-startpage")
+            // user_query_div_content.innerHTML = user_query;
 
-//             let model_answer_div = document.createElement("div");
-//             model_answer_div.style.width = "100%";
-//             model_answer_div.style.backgroundColor = "lightblue";
-//             model_answer_div.innerHTML = "Model:";
-//             var model_answer_div_content = document.createElement('div');
-//             model_answer_div_content.setAttribute("class", "model-answer-container-startpage")
-//             model_answer_div_content.style.width = "100%";
-//             model_answer_div_content.style.backgroundColor = "lightblue";
-//             model_answer_div_content.innerHTML = answer;
-//             let user_msg_seperator = document.createElement("hr");
-//             let answer_msg_seperator = document.createElement("hr");
-//             messages_div.appendChild(user_query_div);
-//             messages_div.appendChild(user_query_div_content);
-//             messages_div.appendChild(user_msg_seperator);
-//             messages_div.appendChild(model_answer_div);
-//             messages_div.appendChild(model_answer_div_content);
-//             messages_div.appendChild(answer_msg_seperator);
-//         }
-//     });
-//     setTimeout(do_polling, 800);
-// }
+            // let model_answer_div = document.createElement("div");
+            // model_answer_div.style.width = "100%";
+            // model_answer_div.style.backgroundColor = "lightblue";
+            // model_answer_div.innerHTML = "Model:";
+            // var model_answer_div_content = document.createElement('div');
+            // model_answer_div_content.setAttribute("class", "model-answer-container-startpage")
+            // model_answer_div_content.style.width = "100%";
+            // model_answer_div_content.style.backgroundColor = "lightblue";
+            // model_answer_div_content.innerHTML = answer;
+            // let user_msg_seperator = document.createElement("hr");
+            // let answer_msg_seperator = document.createElement("hr");
+            // messages_div.appendChild(user_query_div);
+            // messages_div.appendChild(user_query_div_content);
+            // messages_div.appendChild(user_msg_seperator);
+            // messages_div.appendChild(model_answer_div);
+            // messages_div.appendChild(model_answer_div_content);
+            // messages_div.appendChild(answer_msg_seperator);
+        }
+    });
+    setTimeout(poll_speech_query_answers, 800);
+}
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     do_polling();
-// });
+document.addEventListener("DOMContentLoaded", function () {
+    poll_speech_query_answers();
+});
 
 ///////////////////////////////////////
 
