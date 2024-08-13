@@ -1,48 +1,27 @@
 
 //// Polling of new user queries //////
 function poll_speech_query_answers() {
+    let selectedDocuments = getSelectedDocuments();
+    let msg = {
+        "selected_documents": selectedDocuments
+    };
     fetch("/check_for_speech_queries", {
-        method: "GET",
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
+        body: JSON.stringify(msg),
         keepalive: true
     }).then(response => {
         return response.json();
     }).then(data => {
         if (data["success"]) {
-            let messages_div = document.getElementById("chat-messages-startpage");
-            // let job_dict = data["job_list"];
-            // let user_query = job_dict["query"];
-            // let answer = "";
-            // if("agent_answer" in job_dict){
-            //     answer = job_dict["agent_answer"];
-            // }
-
-            // let user_query_div = document.createElement("div");
-            // user_query_div.style.width = "100%";
-            // user_query_div.innerHTML = "User:";
-            // var user_query_div_content = document.createElement('div');
-            // user_query_div_content.setAttribute("class", "user-question-container-startpage")
-            // user_query_div_content.innerHTML = user_query;
-
-            // let model_answer_div = document.createElement("div");
-            // model_answer_div.style.width = "100%";
-            // model_answer_div.style.backgroundColor = "lightblue";
-            // model_answer_div.innerHTML = "Model:";
-            // var model_answer_div_content = document.createElement('div');
-            // model_answer_div_content.setAttribute("class", "model-answer-container-startpage")
-            // model_answer_div_content.style.width = "100%";
-            // model_answer_div_content.style.backgroundColor = "lightblue";
-            // model_answer_div_content.innerHTML = answer;
-            // let user_msg_seperator = document.createElement("hr");
-            // let answer_msg_seperator = document.createElement("hr");
-            // messages_div.appendChild(user_query_div);
-            // messages_div.appendChild(user_query_div_content);
-            // messages_div.appendChild(user_msg_seperator);
-            // messages_div.appendChild(model_answer_div);
-            // messages_div.appendChild(model_answer_div_content);
-            // messages_div.appendChild(answer_msg_seperator);
+            query = data["query"]
+            assistant_answer = data["answer"]
+            sources = data["sources"]
+            let chat_div = document.getElementById('chat-messages-startpage');
+            insert_user_input_message(chat_div, query);
+            insert_chatgpt_answer_message(chat_div, assistant_answer, sources);
         }
     });
     setTimeout(poll_speech_query_answers, 800);
@@ -80,8 +59,7 @@ function handleKeyPress() {
     handle_chat(msg);
 }
 
-function insert_user_input_message(chat_div, input_div) {
-    let input_text = input_div.textContent;
+function insert_user_input_message(chat_div, input_text) {
     let container_div = document.createElement("div");
     container_div.setAttribute("class", "user-question-container-startpage");
 
@@ -93,22 +71,12 @@ function insert_user_input_message(chat_div, input_div) {
     new_user_div_content.innerHTML = input_text;
     let hr_element = document.createElement("hr");
 
-    let spinner_div = document.createElement("div");
-    spinner_div.setAttribute("class", "spinner-border");
-    spinner_div.setAttribute("role", "status");
-    spinner_div.style.display = "block";
-    spinner_div.style.marginLeft = "auto";
-    spinner_div.style.marginRight = "auto";
-
     //container_div.appendChild(close_span);
     container_div.appendChild(new_user_div);
     container_div.appendChild(new_user_div_content);
     container_div.appendChild(hr_element);
     chat_div.appendChild(container_div);
-    chat_div.appendChild(spinner_div);
 
-    input_div.innerHTML = "";
-    return spinner_div;
 }
 
 function insert_chatgpt_answer_message(chat_div, response_message, sources) {
@@ -143,7 +111,6 @@ function insert_chatgpt_answer_message(chat_div, response_message, sources) {
 
     let new_assistant_div_sources = document.createElement("div");
     new_assistant_div_sources.setAttribute("class", "answer-sources");
-    //new_assistant_div_sources.className = "answer-sources";
     new_assistant_div_sources.style.width = "100%";
     new_assistant_div_sources.style.backgroundColor = "lightblue";
     new_assistant_div_sources.style.display = "none";
@@ -169,7 +136,17 @@ function insert_chatgpt_answer_message(chat_div, response_message, sources) {
 function handle_chat(msg) {
     let chat_div = document.getElementById('chat-messages-startpage');
     let input_div = document.getElementById('question-prompt-all-documents');
-    let spinner_div = insert_user_input_message(chat_div, input_div);
+    insert_user_input_message(chat_div, input_div.textContent);
+    input_div.innerHTML = "";
+
+    let spinner_div = document.createElement("div");
+    spinner_div.setAttribute("class", "spinner-border");
+    spinner_div.setAttribute("role", "status");
+    spinner_div.style.display = "block";
+    spinner_div.style.marginLeft = "auto";
+    spinner_div.style.marginRight = "auto";
+    chat_div.appendChild(spinner_div);
+
     fetch("/enter_query", {
         method: "POST",
         headers: {

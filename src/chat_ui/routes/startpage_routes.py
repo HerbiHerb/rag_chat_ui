@@ -87,13 +87,23 @@ def enter_query():
 @app.route("/check_for_speech_queries", methods=["POST", "GET"])
 def check_for_speech_queries():
     response = {"success": False}
+    request_data = json.loads(request.data)
     user_id = session["user_id"]
     # check if there are new queries in the host database
     print("check for speech queries")
-    query_data = json.dumps({"user_id": user_id, "selected_documents": []})
-    answer_data = requests.post(
-        url=os.environ["HOST_URL"] + "/process_speech_query", data=query_data
-    )
+    try:
+        selected_documents = request_data["selected_documents"]
+        query_data = json.dumps(
+            {"user_id": user_id, "selected_documents": selected_documents}
+        )
+        request_response = requests.post(
+            url=os.environ["HOST_URL"] + "/process_speech_query", data=query_data
+        )
+        response_data = json.loads(request_response.text)
+        response.update(response_data)
+        response["success"] = response_data["success"]
+    except Exception as e:
+        print(e)
     return jsonify(response)
 
 
