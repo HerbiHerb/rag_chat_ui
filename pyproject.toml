@@ -8,17 +8,12 @@ packages = [{include = "chat_ui", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
-chromadb = "^0.3.25"
 flask = "^2.3.2"
 flask-sqlalchemy = "^3.0.3"
 pydantic = "^1.10.8"
-jupyterlab = "^4.0.1"
 requests = "^2.31.0"
-beautifulsoup4 = "^4.12.2"
-lxml = "^4.9.2"
-flask-cors = "^4.0.1"
-flask-session = "^0.8.0"
 redis = "^5.0.8"
+flask-session = "^0.8.0"
 
 
 
