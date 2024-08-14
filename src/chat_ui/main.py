@@ -13,7 +13,7 @@ def main():
     ) as file:
         config = yaml.safe_load(file)
         os.environ["HOST_URL"] = config["host_url"]
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5001)
 
 
 if __name__ == "__main__":

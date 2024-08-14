@@ -1,11 +1,10 @@
 import os, signal
 from typing import Dict, List, Tuple
 import requests
-import yaml
 from flask import (
     jsonify,
     render_template,
-    redirect,
+    make_response,
     request,
     session,
 )
@@ -24,13 +23,26 @@ def startpage():
     )
     response_data = json.loads(request_response.text)
     conv_id = response_data["conv_id"]
-    chat_messages = requests.post(
+    conv_data = requests.post(
         url=os.environ["HOST_URL"] + "/get_chat_messages",
         data=json.dumps({"query": conv_id, "user_id": user_id}),
     )
-    chat_messages = json.loads(chat_messages.text)
+    documents = requests.post(
+        url=os.environ["HOST_URL"] + "/get_all_doument_meta_data",
+        data=json.dumps({"user_id": user_id}),
+    )
+    documents = json.loads(documents.text)
+    conv_data = json.loads(conv_data.text)
+    chat_messages = conv_data["chat_messages"]
+    sources = conv_data["sources"]
+    chat_messages_with_sources = [
+        list(entry) for entry in list(zip(chat_messages, sources))
+    ]
     return render_template(
-        "startpage.html", session=session, chat_messages=chat_messages
+        "startpage.html",
+        session=session,
+        chat_messages=chat_messages_with_sources,
+        documents=documents,
     )
 
 
@@ -50,7 +62,14 @@ def enter_query():
     if not "query" in request_data:
         return "Request must contain a 'query' key"
     user_id = session["user_id"]
-    query_data = json.dumps({"query": request_data["query"], "user_id": user_id})
+    selected_documents = request_data["selected_documents"]
+    query_data = json.dumps(
+        {
+            "query": request_data["query"],
+            "user_id": user_id,
+            "selected_documents": selected_documents,
+        }
+    )
     try:
         request_response = requests.post(
             url=os.environ["HOST_URL"] + "/execute_rag", data=query_data
@@ -63,8 +82,44 @@ def enter_query():
     return jsonify(response)
 
 
+@app.route("/check_for_speech_queries", methods=["POST", "GET"])
+def check_for_speech_queries():
+    response = {"success": False}
+    request_data = json.loads(request.data)
+    user_id = session["user_id"]
+    # check if there are new queries in the host database
+    print("check for speech queries")
+    try:
+        selected_documents = request_data["selected_documents"]
+        query_data = json.dumps(
+            {"user_id": user_id, "selected_documents": selected_documents}
+        )
+        request_response = requests.post(
+            url=os.environ["HOST_URL"] + "/process_speech_query", data=query_data
+        )
+        response_data = json.loads(request_response.text)
+        response.update(response_data)
+        response["success"] = response_data["success"]
+    except Exception as e:
+        print(e)
+    return jsonify(response)
+
+
 @app.route("/start_new_conversation", methods=["POST"])
 def start_new_conversation():
+    response = {"success": False}
+    user_id = session["user_id"]
+    query_data = json.dumps({"user_id": user_id})
+    new_conv_id = requests.post(
+        url=os.environ["HOST_URL"] + "/create_new_conversation", data=query_data
+    )
+    new_conv_id = json.loads(new_conv_id.text)["conv_id"]
+    response["success"] = True
+    return response
+
+
+@app.route("/get_answer_sources", methods=["POST"])
+def get_answer_sources():
     response = {"success": False}
     user_id = session["user_id"]
     query_data = json.dumps({"user_id": user_id})

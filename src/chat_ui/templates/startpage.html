@@ -6,20 +6,54 @@
         <div style="width: 100%; display:inline-block; margin-top: 10px;">
             <button id="start-new-conversation-btn" class="btn btn-info" type="button" style="float: left; width: 100%;">New Chat</button>
         </div>
+        <div style="width: 100%; display:inline-block; margin-top: 10px; height: 60vh; overflow-y: scroll; border: 1px solid #999999; background-color: white;">
+            <h5 style="text-align: center;">Dokumente</h5>
+            <ul style="list-style-type: none; padding-left: 10px;">
+                {% for document in documents %}
+                <li style="margin-bottom: 10px;">
+                    <input type="checkbox" id="doc{{loop.index}}" name="document" value="{{document['document_name']}}">
+                    <label for="doc{{loop.index}}">{{document["document_name"]}}</label>
+                </li>
+                {% endfor %}
+                <!-- Beispiel-Dokumente -->
+                <!-- <li style="margin-bottom: 10px;">
+                    <input type="checkbox" id="doc1" name="document" value="Dokument 1">
+                    <label for="doc1">Dokument 1</label>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <input type="checkbox" id="doc2" name="document" value="Dokument 2">
+                    <label for="doc2">Dokument 2</label>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <input type="checkbox" id="doc3" name="document" value="Dokument 3">
+                    <label for="doc3">Dokument 3</label>
+                </li> -->
+            </ul>
+        </div>
     </div>
     <div class="col-sm-6">
-
         <div class="chat-answer-view" id="chat-messages-startpage" style="height: 70vh; background-color: white; border: 1px solid #999999; overflow-y: scroll; display: block;">
-            {% for message in chat_messages %}{% if message["role"]=="assistant" %}
+            {% for message, sources in chat_messages %}{% if message["role"]=="assistant" %}
             <div class="model-answer-container-startpage">
                 <div style="width: 100%; background-color: lightblue;">Model:</div>
                 <div style="width: 100%; background-color: lightblue;">{{message["content"]}}</div>
-                <div style="width: 100%; background-color: lightblue;">Sources:</div>
-                {% for url in message["urls"] %}
+                <div style="width: 100%; background-color: lightblue; display: inline-block;">
+                    <button class="show-hide-sources btn btn-info" type="button" style="float: left; width: 200px;">Show Sources</button>
+                </div>
+                <div class="answer-sources" style="width: 100%; background-color: lightblue; display: none;">
+                    {% for source in sources %}
+                        {% if "text" in source %}
+                        <p>{{source["text"]}}</p>  
+                        {% endif %}
+                    {% endfor %}
+                    <!-- <p>Test source 1</p>
+                    <p>Test source 2</p> -->
+                </div>  
+                <!-- {% for url in message["urls"] %}
                     <div style="width: 100%; background-color: lightblue;">
                         <a href="{{url}}" target="_blank">{{url}}</a>
                     </div>
-                {% endfor %}
+                {% endfor %} -->
                 <hr>
             </div>{% endif %}{% if message["role"]=="user" %}
             <div class="user-question-container-startpage">
