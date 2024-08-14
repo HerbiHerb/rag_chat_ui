@@ -1,5 +1,5 @@
 # Comment this line in if you start the rag-assistant and chat-ui seperately
-host_url: http://localhost:5000
+# host_url: http://localhost:5000
 
 # Comment this line in if you start the rag-assistant and chat-ui with docker compose
-#host_url: http://host.docker.internal:5000
+host_url: http://host.docker.internal:5000

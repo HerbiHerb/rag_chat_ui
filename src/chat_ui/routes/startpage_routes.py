@@ -1,7 +1,6 @@
 import os, signal
 from typing import Dict, List, Tuple
 import requests
-import yaml
 from flask import (
     jsonify,
     render_template,
@@ -9,7 +8,6 @@ from flask import (
     request,
     session,
 )
-from flask_cors import cross_origin
 from ..init_flask_app import app
 import json
 
@@ -131,13 +129,3 @@ def get_answer_sources():
     new_conv_id = json.loads(new_conv_id.text)["conv_id"]
     response["success"] = True
     return response
-
-
-@app.route("/get_current_user_id", methods=["GET"])
-@cross_origin()  # Enable CORS for this route
-def get_current_user_id():
-    response = {"success": False}
-    if "user_id" in session:
-        response["user_id"] = session["user_id"]
-        response["success"] = True
-    return jsonify(response)
