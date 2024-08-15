@@ -1,6 +1,7 @@
 import os, signal
 from typing import Dict, List, Tuple
 import requests
+import json
 from flask import (
     jsonify,
     render_template,
@@ -9,7 +10,7 @@ from flask import (
     session,
 )
 from ..init_flask_app import app
-import json
+from ..output_utils.speaking import speak_the_answer
 
 
 @app.route("/startpage")
@@ -99,8 +100,10 @@ def check_for_speech_queries():
         request_response = requests.post(
             url=os.environ["HOST_URL"] + "/process_speech_query", data=query_data
         )
-        response_data = json.loads(request_response.text)
         response.update(response_data)
+        response_data = json.loads(request_response.text)
+        if "answer" in response_data:
+            speak_the_answer(answer=response_data["answer"])
         response["success"] = response_data["success"]
     except Exception as e:
         print(e)

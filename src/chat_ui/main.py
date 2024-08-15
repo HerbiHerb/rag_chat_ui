@@ -8,7 +8,7 @@ from .init_flask_app import app
 
 def main():
     with open(
-        "config/config.yaml",
+        os.getenv("CONFIG_FP"),
         "r",
     ) as file:
         config = yaml.safe_load(file)
