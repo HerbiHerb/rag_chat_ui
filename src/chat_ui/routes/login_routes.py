@@ -34,7 +34,15 @@ def login():
     response_data = json.loads(request_response.text)
     if "user_id" in response_data and response_data["user_id"] != None:
         session["user_id"] = response_data["user_id"]
-        redis_client.set("user_id", response_data["user_id"])
+        try:
+            redis_client.set("user_id", response_data["user_id"])
+        except Exception as e:
+            print(e)
+            with open("src/chat_ui/static/tmp/tmp_user_file.json", "w") as f:
+                json.dump(
+                    {"user_id": response_data["user_id"]},
+                    f,
+                )
         response["success"] = True
         flash("You were successfully logged in", "success")
         return redirect(url_for("startpage"))
