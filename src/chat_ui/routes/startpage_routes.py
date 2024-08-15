@@ -100,8 +100,8 @@ def check_for_speech_queries():
         request_response = requests.post(
             url=os.environ["HOST_URL"] + "/process_speech_query", data=query_data
         )
-        response.update(response_data)
         response_data = json.loads(request_response.text)
+        response.update(response_data)
         if "answer" in response_data:
             speak_the_answer(answer=response_data["answer"])
         response["success"] = response_data["success"]
