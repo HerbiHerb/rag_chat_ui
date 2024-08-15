@@ -86,7 +86,9 @@ def enter_query():
 def check_for_speech_queries():
     response = {"success": False}
     request_data = json.loads(request.data)
-    user_id = session["user_id"]
+    user_id = session["user_id"] if "user_id" in session else None
+    if not user_id:
+        return jsonify(response)
     # check if there are new queries in the host database
     print("check for speech queries")
     try:
