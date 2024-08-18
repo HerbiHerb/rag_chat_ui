@@ -134,3 +134,33 @@ def get_answer_sources():
     new_conv_id = json.loads(new_conv_id.text)["conv_id"]
     response["success"] = True
     return response
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in {"txt"}
+
+
+@app.route("/upload_document", methods=["POST"])
+def upload_document():
+    if "file" not in request.files:
+        return jsonify({"success": False, "error": "No file part"})
+
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"success": False, "error": "No selected file"})
+
+    if file and allowed_file(file.filename):
+        # filename = secure_filename(file.filename)
+
+        # Um den Textinhalt direkt zu lesen, ohne die Datei zu speichern:
+        file_content = file.read().decode("utf-8")  # Dateiinhalt als Text
+
+        user_id = session["user_id"]
+        query_data = json.dumps({"user_id": user_id, "uploaded_text": file_content})
+        new_conv_id = requests.post(
+            url=os.environ["HOST_URL"] + "/upload_document", data=query_data
+        )
+
+        return jsonify({"success": True, "file_content": file_content})
+    else:
+        return jsonify({"success": False, "error": "File type not allowed"})

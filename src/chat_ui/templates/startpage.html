@@ -3,10 +3,10 @@
 {% block body %}
 <div class="row">
     <div class="col-sm-3">
-        <div style="width: 100%; display:inline-block; margin-top: 10px;">
+        <div style="width: 100%; display:inline-block; height: 5vh;">
             <button id="start-new-conversation-btn" class="btn btn-info" type="button" style="float: left; width: 100%;">New Chat</button>
         </div>
-        <div style="width: 100%; display:inline-block; margin-top: 10px; height: 60vh; overflow-y: scroll; border: 1px solid #999999; background-color: white;">
+        <div style="width: 100%; display:inline-block; margin-top: 10px; height: calc(65vh - 15px); overflow-y: scroll; border: 1px solid #999999; background-color: white;">
             <h5 style="text-align: center;">Dokumente</h5>
             <ul style="list-style-type: none; padding-left: 10px;">
                 {% for document in documents %}
@@ -15,25 +15,13 @@
                     <label for="doc{{loop.index}}">{{document["document_name"]}}</label>
                 </li>
                 {% endfor %}
-                <!-- Beispiel-Dokumente -->
-                <!-- <li style="margin-bottom: 10px;">
-                    <input type="checkbox" id="doc1" name="document" value="Dokument 1">
-                    <label for="doc1">Dokument 1</label>
-                </li>
-                <li style="margin-bottom: 10px;">
-                    <input type="checkbox" id="doc2" name="document" value="Dokument 2">
-                    <label for="doc2">Dokument 2</label>
-                </li>
-                <li style="margin-bottom: 10px;">
-                    <input type="checkbox" id="doc3" name="document" value="Dokument 3">
-                    <label for="doc3">Dokument 3</label>
-                </li> -->
             </ul>
         </div>
     </div>
     <div class="col-sm-6">
         <div class="chat-answer-view" id="chat-messages-startpage" style="height: 70vh; background-color: white; border: 1px solid #999999; overflow-y: scroll; display: block;">
-            {% for message, sources in chat_messages %}{% if message["role"]=="assistant" %}
+            {% for message, sources in chat_messages %}
+            {% if message["role"]=="assistant" %}
             <div class="model-answer-container-startpage">
                 <div style="width: 100%; background-color: lightblue;">Model:</div>
                 <div style="width: 100%; background-color: lightblue;">{{message["content"]}}</div>
@@ -46,21 +34,28 @@
                         <p>{{source["text"]}}</p>  
                         {% endif %}
                     {% endfor %}
-                    <!-- <p>Test source 1</p>
-                    <p>Test source 2</p> -->
                 </div>  
-                <!-- {% for url in message["urls"] %}
-                    <div style="width: 100%; background-color: lightblue;">
-                        <a href="{{url}}" target="_blank">{{url}}</a>
-                    </div>
-                {% endfor %} -->
                 <hr>
-            </div>{% endif %}{% if message["role"]=="user" %}
+            </div>
+            {% endif %}
+            {% if message["role"]=="user" %}
             <div class="user-question-container-startpage">
                 <div style="width: 100%;">User:</div>
                 <div style="width: 100%;">{{message["content"]}}</div>
                 <hr>
-            </div>{% endif %}{% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div style="width: 100%; display:inline-block;">
+            <!-- <h5 style="text-align: center;">Upload Dokument</h5> -->
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" id="file-input" name="file" accept=".txt" style="margin-bottom: 10px;">
+                <button id="upload-btn" class="btn btn-info" type="button" style="width: 100%;">Upload</button>
+            </form>
+            <div id="upload-status" style="margin-top: 10px; text-align: left;"></div>
         </div>
     </div>
 </div>
@@ -76,6 +71,7 @@
     <div class="col-sm-3">
     </div>
 </div>
+
 <div id="test-div"></div>
 <div class="modal" id="source-modal" >
     <div class="modal-dialog mw-100 w-75">

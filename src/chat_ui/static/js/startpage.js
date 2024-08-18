@@ -218,11 +218,6 @@ document.getElementById("start-new-conversation-btn").addEventListener("click", 
 })
 
 
-function showHideButtonClickHandler(){
-
-};
-
-
 function addToggleEventListener(button) {
     button.addEventListener('click', function () {
         const sourceContainer = this.parentElement.nextElementSibling;
@@ -243,19 +238,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const buttons = document.querySelectorAll('.show-hide-sources');
 
     buttons.forEach(addToggleEventListener);
-
-    // buttons.forEach(button => {
-    //     button.addEventListener('click', function () {
-    //         // Finde den nächsten Element-Sibling mit der Klasse 'answer-sources'
-    //         const sourceContainer = this.parentElement.nextElementSibling;
-    //         if (sourceContainer.style.display === 'none' || sourceContainer.style.display === '') {
-    //             sourceContainer.style.display = 'block';
-    //             this.innerText = 'Hide Sources';
-    //         } else {
-    //             sourceContainer.style.display = 'none';
-    //             this.innerText = 'Show Sources';
-    //         }
-    //     });
-    // });
 });
 
+document.getElementById('upload-btn').addEventListener('click', function () {
+    const form = document.getElementById('upload-form');
+    const formData = new FormData(form);
+    
+    fetch('/upload_document', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json())
+    .then(data => {
+        let statusDiv = document.getElementById('upload-status');
+        if (data.success) {
+            statusDiv.innerHTML = "<span style='color: green;'>Upload successful!</span>";
+        } else {
+            statusDiv.innerHTML = "<span style='color: red;'>Upload failed: " + data.error + "</span>";
+        }
+    }).catch(error => {
+        document.getElementById('upload-status').innerHTML = "<span style='color: red;'>An error occurred: " + error.message + "</span>";
+    });
+});
