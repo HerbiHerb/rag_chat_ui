@@ -4,6 +4,7 @@ from .routes.startpage_routes import *
 from .routes.login_routes import *
 from .routes.register_routes import *
 from .init_flask_app import app
+from dotenv import load_dotenv
 
 
 def main():
@@ -17,4 +18,5 @@ def main():
 
 
 if __name__ == "__main__":
+    load_dotenv()
     main()
