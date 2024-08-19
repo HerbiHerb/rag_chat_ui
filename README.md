@@ -32,7 +32,9 @@
 
 Rag-Chat-UI is a user interface developed to communicate with a backend API (`rag_assistant_api`). It allows users to submit both text and voice inputs, which are then forwarded to a language model to generate responses. The UI supports various features such as user authentication, document uploads, and displaying context-aware responses from the language model.
 
-![Chatbot-Architecture](src/readme_images/Chatbot-Architecture.png)
+![image info](src/chat_ui/static/images/chat_ui.PNG)
+
+This project is only one part of the bigger Home-Assitant-Project, which consists of the two other repositories Rag-Assistant-API and Speech-2-Text. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
