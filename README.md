@@ -72,10 +72,13 @@ To get the project up and running locally, follow these steps.
     ```sh
     poetry install
     ```
-3. Configure the application:
+3. Create the .env file with the following variables in there:
+    CONFIG_FP = path to the config.yaml file
+    OPENAI_API_KEY = openai key for the speech to text functionality
+4. Configure the application:
     Edit the config/config.yaml file according to your requirements.
     Ensure that the environment variable CONFIG_FP points to this file.
-4. Run the application:
+5. Run the application:
     ```sh
     python -m src.chat_ui.main
     ```
