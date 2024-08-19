@@ -98,7 +98,7 @@ Features
 
 ### Roadmap
 
-- [ ] Implement additional authentication mechanisms
+- [ ] Add tool selection into the ui (similar to document selection)
 - [ ] Support for more file formats in uploads
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
