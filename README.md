@@ -84,10 +84,10 @@ To get the project up and running locally, follow these steps.
 Once installed and configured, the application can be accessed via your browser at http://localhost:5001. Users can log in, upload documents, and interact with the language model.
 Features
 
-    User Authentication: Secure access for registered users.
-    Document Upload: Supports uploading .txt files to provide context for model responses.
-    Text and Voice Input: Interact with the model using text or voice inputs.
-    Source Display: Shows the sources used to generate responses.
+* User Authentication: Secure access for registered users.
+* Document Upload: Supports uploading .txt files to provide context for model responses.
+* Text and Voice Input: Interact with the model using text or voice inputs.
+* Source Display: Shows the sources used to generate responses.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -102,11 +102,11 @@ Features
 
 Contributions are welcome! If you have suggestions for improving this project, please fork the repo and create a pull request. Alternatively, you can open an issue with the "enhancement" tag.
 
-    Fork the Project
-    Create a new Branch (git checkout -b feature/AmazingFeature)
-    Commit your Changes (git commit -m 'Add some AmazingFeature')
-    Push to the Branch (git push origin feature/AmazingFeature)
-    Open a Pull Request
+1. Fork the Project
+2. Create a new Branch (git checkout -b feature/AmazingFeature)
+3. Commit your Changes (git commit -m 'Add some AmazingFeature')
+4. Push to the Branch (git push origin feature/AmazingFeature)
+5. Open a Pull Request
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
