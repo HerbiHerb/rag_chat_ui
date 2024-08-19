@@ -123,19 +123,6 @@ def start_new_conversation():
     return response
 
 
-@app.route("/get_answer_sources", methods=["POST"])
-def get_answer_sources():
-    response = {"success": False}
-    user_id = session["user_id"]
-    query_data = json.dumps({"user_id": user_id})
-    new_conv_id = requests.post(
-        url=os.environ["HOST_URL"] + "/create_new_conversation", data=query_data
-    )
-    new_conv_id = json.loads(new_conv_id.text)["conv_id"]
-    response["success"] = True
-    return response
-
-
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in {"txt"}
 
@@ -157,10 +144,11 @@ def upload_document():
 
         user_id = session["user_id"]
         query_data = json.dumps({"user_id": user_id, "uploaded_text": file_content})
-        new_conv_id = requests.post(
+        request_response = requests.post(
             url=os.environ["HOST_URL"] + "/upload_document", data=query_data
         )
+        response_data = json.loads(request_response.text)
 
-        return jsonify({"success": True, "file_content": file_content})
+        return jsonify({"success": response_data["success"]})
     else:
         return jsonify({"success": False, "error": "File type not allowed"})

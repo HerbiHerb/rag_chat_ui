@@ -167,38 +167,6 @@ function handle_chat(msg) {
     });
 }
 
-
-// document.getElementById("start-btn").addEventListener("click", function (event){
-//     fetch("/start_listening", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         keepalive: true
-//     }).then(response => {
-//         return response.json()
-//     }).then(data => {
-//         if (data["success"]) {
-//         }
-//     });
-// })
-
-// document.getElementById("stop-btn").addEventListener("click", function (event){
-//     fetch("/stop_listening", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         keepalive: true
-//     }).then(response => {
-//         return response.json()
-//     }).then(data => {
-//         if (data["success"]) {
-//         }
-//     });
-// })
-
-
 document.getElementById("start-new-conversation-btn").addEventListener("click", function (event){
     fetch("/start_new_conversation", {
         method: "POST",
@@ -210,8 +178,6 @@ document.getElementById("start-new-conversation-btn").addEventListener("click", 
         return response.json()
     }).then(data => {
         if (data["success"]) {
-            // let messages_div = document.getElementById("chat-messages-startpage");
-            // messages_div.innerHTML = "";
             location.reload();
         }
     });
@@ -252,6 +218,7 @@ document.getElementById('upload-btn').addEventListener('click', function () {
         let statusDiv = document.getElementById('upload-status');
         if (data.success) {
             statusDiv.innerHTML = "<span style='color: green;'>Upload successful!</span>";
+            window.location.reload();
         } else {
             statusDiv.innerHTML = "<span style='color: red;'>Upload failed: " + data.error + "</span>";
         }
