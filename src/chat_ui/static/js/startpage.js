@@ -1,35 +1,35 @@
 
 //// Polling of new user queries //////
-function poll_speech_query_answers() {
-    let selectedDocuments = getSelectedDocuments();
-    let msg = {
-        "selected_documents": selectedDocuments
-    };
-    fetch("/check_for_speech_queries", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(msg),
-        keepalive: true
-    }).then(response => {
-        return response.json();
-    }).then(data => {
-        if (data["success"]) {
-            query = data["query"]
-            assistant_answer = data["answer"]
-            sources = data["sources"]
-            let chat_div = document.getElementById('chat-messages-startpage');
-            insert_user_input_message(chat_div, query);
-            insert_chatgpt_answer_message(chat_div, assistant_answer, sources);
-        }
-    });
-    setTimeout(poll_speech_query_answers, 800);
-}
+// function poll_speech_query_answers() {
+//     let selectedDocuments = getSelectedDocuments();
+//     let msg = {
+//         "selected_documents": selectedDocuments
+//     };
+//     fetch("/check_for_speech_queries", {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify(msg),
+//         keepalive: true
+//     }).then(response => {
+//         return response.json();
+//     }).then(data => {
+//         if (data["success"]) {
+//             query = data["query"]
+//             assistant_answer = data["answer"]
+//             sources = data["sources"]
+//             let chat_div = document.getElementById('chat-messages-startpage');
+//             insert_user_input_message(chat_div, query);
+//             insert_chatgpt_answer_message(chat_div, assistant_answer, sources);
+//         }
+//     });
+//     setTimeout(poll_speech_query_answers, 800);
+// }
 
-document.addEventListener("DOMContentLoaded", function () {
-    poll_speech_query_answers();
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     poll_speech_query_answers();
+// });
 
 ///////////////////////////////////////
 

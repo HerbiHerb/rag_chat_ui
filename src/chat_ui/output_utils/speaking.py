@@ -23,3 +23,5 @@ def speak_the_answer(answer: str) -> None:
         ) as response:
             for chunk in response.iter_bytes(1024):
                 stream.write(chunk)
+                if os.getenv("STOP_SPEAKING") == "True":
+                    break
