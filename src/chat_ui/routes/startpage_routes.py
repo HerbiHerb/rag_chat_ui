@@ -104,6 +104,7 @@ def check_for_speech_queries():
         response_data = json.loads(request_response.text)
         response.update(response_data)
         if "answer" in response_data:
+            os.environ["STOP_SPEAKING"] = "False"
             speak_the_answer(answer=response_data["answer"])
         response["success"] = response_data["success"]
     except Exception as e:
@@ -111,19 +112,19 @@ def check_for_speech_queries():
     return jsonify(response)
 
 
-@app.route("/start_test_speaking", methods=["GET"])
-def start_test_speaking():
-    long_text = """Intelligent Home Assistant on a Raspberry Pi: A DIY Project with LLMs, Vector Databases, and Microservices Introduction
-In today's digital world, intelligent assistants have become an integral part of our daily lives. The ability to perform complex tasks through voice commands has revolutionized the way we interact with technology. In this blog post, I want to share my latest project: the development of an intelligent home assistant powered by a Large Language Model (LLM) running on a Raspberry Pi. This project combines modern technologies like vector databases, email integration, and a microservice architecture. It was an exciting endeavor that I’m eager to share with you.
+# @app.route("/start_test_speaking", methods=["GET"])
+# def start_test_speaking():
+#     long_text = """Intelligent Home Assistant on a Raspberry Pi: A DIY Project with LLMs, Vector Databases, and Microservices Introduction
+# In today's digital world, intelligent assistants have become an integral part of our daily lives. The ability to perform complex tasks through voice commands has revolutionized the way we interact with technology. In this blog post, I want to share my latest project: the development of an intelligent home assistant powered by a Large Language Model (LLM) running on a Raspberry Pi. This project combines modern technologies like vector databases, email integration, and a microservice architecture. It was an exciting endeavor that I’m eager to share with you.
 
-The Idea Behind the Project
-The idea to develop my own home assistant stemmed from a desire to integrate the capabilities of modern AI technology into my smart home. While most commercial solutions are powerful, they often come with limitations when it comes to customization and the use of specific data sources. Hence, I decided to build my own assistant tailored to my personal needs and designed to work with my data.
-The Architecture: Microservices, Docker, and Raspberry Pi
+# The Idea Behind the Project
+# The idea to develop my own home assistant stemmed from a desire to integrate the capabilities of modern AI technology into my smart home. While most commercial solutions are powerful, they often come with limitations when it comes to customization and the use of specific data sources. Hence, I decided to build my own assistant tailored to my personal needs and designed to work with my data.
+# The Architecture: Microservices, Docker, and Raspberry Pi
 
-Microservice Architecture
-The assistant is based on a microservice architecture where the backend and frontend are decoupled. This approach offers the advantage of developing, testing, and maintaining different components independently. For example, the speech processing service can be updated independently of the database service without needing to restart the entire system."""
-    speak_the_answer(answer=long_text)
-    return jsonify({"success": True})
+# Microservice Architecture
+# The assistant is based on a microservice architecture where the backend and frontend are decoupled. This approach offers the advantage of developing, testing, and maintaining different components independently. For example, the speech processing service can be updated independently of the database service without needing to restart the entire system."""
+#     speak_the_answer(answer=long_text)
+#     return jsonify({"success": True})
 
 
 @app.route("/stop_speaking", methods=["GET"])
