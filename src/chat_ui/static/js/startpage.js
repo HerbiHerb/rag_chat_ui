@@ -209,6 +209,12 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementById('upload-btn').addEventListener('click', function () {
     const form = document.getElementById('upload-form');
     const formData = new FormData(form);
+    let upload_btn = document.getElementById('upload-btn');
+    upload_btn.disabled = true;
+
+    let spinner_div = document.getElementById('uploading-spinner');
+    spinner_div.style.display = "block";
+
     
     fetch('/upload_document', {
         method: 'POST',
@@ -222,6 +228,8 @@ document.getElementById('upload-btn').addEventListener('click', function () {
         } else {
             statusDiv.innerHTML = "<span style='color: red;'>Upload failed: " + data.error + "</span>";
         }
+        spinner_div.style.display = "none";
+        upload_btn.disabled = false;
     }).catch(error => {
         document.getElementById('upload-status').innerHTML = "<span style='color: red;'>An error occurred: " + error.message + "</span>";
     });
