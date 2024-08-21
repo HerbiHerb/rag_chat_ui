@@ -34,7 +34,7 @@ Rag-Chat-UI is a user interface developed to communicate with a backend API (`ra
 
 ![image info](src/chat_ui/static/images/chat_ui.PNG)
 
-This project is only one part of the bigger Home-Assitant-Project, which consists of the two other repositories [Rag-Assistant-API](https://github.com/HerbiHerb/rag_assistant_api) and [Speech-2-Text](https://github.com/HerbiHerb/speech_2_text). 
+This project is only one part of the bigger Home-Assitant-Project, which consists of the two other repositories [Rag-Assistant-API](https://github.com/HerbiHerb/rag_assistant_api), [Speech-2-Text](https://github.com/HerbiHerb/speech_2_text) [Rag-Assistant-Start](https://github.com/HerbiHerb/rag_assistant_start). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
