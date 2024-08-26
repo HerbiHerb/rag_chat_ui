@@ -117,14 +117,14 @@ function insert_chatgpt_answer_message(chat_div, response_message, sources) {
 
     for (let i = 0; i < sources.length; i++) {
         let meta_data = sources[i]
-        if ("text" in meta_data) {
-            let source_text = meta_data["text"];
-            let source_text_paragraph = document.createElement("p");
-            source_text_paragraph.style.width = "100%";
-            source_text_paragraph.style.backgroundColor = "lightblue";
-            source_text_paragraph.innerHTML = source_text;
-            new_assistant_div_sources.appendChild(source_text_paragraph);
-
+        //let source_text = meta_data["text"];
+        let source_text_paragraph = document.createElement("p");
+        source_text_paragraph.style.width = "100%";
+        source_text_paragraph.style.backgroundColor = "lightblue";
+        source_text_paragraph.innerHTML = JSON.stringify(meta_data);
+        new_assistant_div_sources.appendChild(source_text_paragraph);
+        if ("play_video" in meta_data) {
+            //Add iframe object to play the video
         } 
     }
     container_div.appendChild(new_assistant_div_sources);

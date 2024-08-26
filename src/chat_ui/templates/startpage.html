@@ -30,9 +30,10 @@
                 </div>
                 <div class="answer-sources" style="width: 100%; background-color: lightblue; display: none;">
                     {% for source in sources %}
-                        {% if "text" in source %}
+                        <p>{{source}}</p>  
+                        <!-- {% if "text" in source %}
                         <p>{{source["text"]}}</p>  
-                        {% endif %}
+                        {% endif %} -->
                     {% endfor %}
                 </div>  
                 <hr>
